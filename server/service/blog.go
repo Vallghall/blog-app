@@ -14,31 +14,25 @@ func NewBlogService(r *repo.Repo) *Blog {
 }
 
 func (b *Blog) CreatePost(p post.Post) {
-	//TODO implement me
-	panic("implement me")
+	b.r.BlogRepo.CreatePost(p)
 }
 
 func (b *Blog) UpdatePost(p post.Post) {
-	//TODO implement me
-	panic("implement me")
+	b.r.BlogRepo.UpdatePost(p)
 }
 
 func (b *Blog) DeletePost(postId int) {
-	//TODO implement me
-	panic("implement me")
+	b.r.BlogRepo.DeletePost(postId)
 }
 
 func (b *Blog) GetAllUserPosts(userId int) []post.Post {
-	//TODO implement me
-	panic("implement me")
+	return b.r.BlogRepo.GetAllUserPosts(userId)
 }
 
 func (b *Blog) GetLastNUserPosts(userId, n int) []post.Post {
-	//TODO implement me
-	panic("implement me")
+	return b.r.BlogRepo.GetLastNUserPosts(userId, n)
 }
 
 func (b *Blog) GetPostById(id int) post.Post {
-	//TODO implement me
-	panic("implement me")
+	return b.r.BlogRepo.GetPostById(id)
 }

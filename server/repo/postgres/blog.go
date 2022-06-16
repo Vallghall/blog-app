@@ -4,6 +4,7 @@ import (
 	"blog-app/model/post"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"log"
 )
 
@@ -24,7 +25,7 @@ INSERT INTO %s (
 	date,
 	hashtags
 ) VALUES ($1,$2,$3,$4,$5);`, postsTable)
-	_, err := bp.db.Query(query, p.AuthorId, p.Title, p.Content, p.Date, p.Hashtags)
+	_, err := bp.db.Query(query, p.AuthorId, p.Title, p.Content, p.Date, pq.Array(p.Hashtags))
 	if err != nil {
 		log.Println("ERROR: " + err.Error())
 	}

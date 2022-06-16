@@ -6,13 +6,14 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func (h *handlers) createPost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 
@@ -20,10 +21,11 @@ func (h *handlers) createPost(c *gin.Context) {
 	err = c.BindJSON(&p)
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 	p.AuthorId = id
+	p.Date = time.Now().UTC()
 
 	h.BlogService.CreatePost(p)
 	c.JSON(http.StatusOK, map[string]string{
@@ -35,14 +37,14 @@ func (h *handlers) readPosts(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 
 	num, err := strconv.Atoi(c.Param("num"))
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 
@@ -56,7 +58,7 @@ func (h *handlers) updatePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("post_id"))
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 
@@ -64,7 +66,7 @@ func (h *handlers) updatePost(c *gin.Context) {
 	err = c.BindJSON(&p)
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 	p.AuthorId = id
@@ -79,7 +81,7 @@ func (h *handlers) deletePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("post_id"))
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
 

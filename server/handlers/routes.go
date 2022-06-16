@@ -9,10 +9,10 @@ func (h *handlers) HandleRoutes() *gin.Engine {
 
 	auth := r.Group("/auth")
 	{
-		auth.POST("sign-in")  // login endpoint
-		auth.POST("sign-up")  // registration endpoint
-		auth.POST("refresh")  // token pair refreshment
-		auth.POST("sign-out") // logging out
+		auth.POST("sign-in", h.signIn)   // login endpoint
+		auth.POST("sign-up", h.signUp)   // registration endpoint
+		auth.POST("refresh", h.refresh)  // token pair refreshment
+		auth.POST("sign-out", h.signOut) // logging out
 	}
 
 	blog := r.Group("/blog")

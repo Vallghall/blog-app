@@ -7,7 +7,11 @@ import (
 )
 
 const (
-	ErrInvalidParams = "error: invalid params"
+	ErrInvalidParams      = "error: invalid params"
+	ErrInvalidCredentials = "error: invalid credentials"
+
+	ErrPasswordDoesntMatch = "error: password does not match confirmation password"
+	ErrBcryptError         = "error while hashing password"
 )
 
 type handlers struct {

@@ -15,8 +15,7 @@ func NewAuthService(r *repo.Repo) *Auth {
 }
 
 func (a *Auth) CreateUser(user users.User) {
-	//TODO implement me
-	panic("implement me")
+	a.r.CreateUser(user)
 }
 
 func (a *Auth) GetUser(username, pw string) users.User {
