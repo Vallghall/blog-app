@@ -15,9 +15,10 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	db := postgres.New(os.Getenv("DB_URL"))
 	r := repo.New(db)
 	s := service.New(r)
-	_ = handlers.New(s)
-
+	g := handlers.New(s).HandleRoutes()
+	log.Fatalln(g.Run(":" + os.Getenv("PORT")))
 }

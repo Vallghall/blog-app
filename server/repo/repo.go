@@ -3,6 +3,7 @@ package repo
 import (
 	"blog-app/model/post"
 	"blog-app/model/users"
+	"blog-app/repo/postgres"
 	"github.com/jmoiron/sqlx"
 	"os/user"
 )
@@ -11,6 +12,7 @@ type AuthRepo interface {
 	CreateUser(user users.User)
 	GetUser(username, pw string) users.User
 	GetUserById() user.User
+	UserExists(u user.User) bool
 }
 
 type BlogRepo interface {
@@ -29,5 +31,8 @@ type Repo struct {
 }
 
 func New(db *sqlx.DB) *Repo {
-	return &Repo{}
+	return &Repo{
+		postgres.NewAuthRepo(db),
+		postgres.NewBlogRepo(db),
+	}
 }

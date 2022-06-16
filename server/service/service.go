@@ -29,5 +29,8 @@ type Services struct {
 }
 
 func New(r *repo.Repo) *Services {
-	return &Services{}
+	return &Services{
+		AuthService: NewAuthService(r),
+		BlogService: NewBlogService(r),
+	}
 }
