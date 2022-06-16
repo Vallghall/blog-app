@@ -47,8 +47,33 @@ func (bp *BlogPostgres) GetAllUserPosts(userId int) []post.Post {
 }
 
 func (bp *BlogPostgres) GetLastNUserPosts(userId, n int) []post.Post {
-	//TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+SELECT p.id,p.author_id, p.title, p.content, p.date, p.hashtags
+	FROM %s p
+	JOIN %s u
+		ON u.id=p.author_id
+	WHERE u.id=$1
+	ORDER BY date DESC
+	LIMIT $2;`, postsTable, usersTable)
+
+	rows, err := bp.db.Query(query, userId, n)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+
+	pp := make([]post.Post, 0)
+	for rows.Next() {
+		var p post.Post
+		err = rows.Scan(&p.Id, &p.AuthorId, &p.Title, &p.Content, &p.Date, pq.Array(&p.Hashtags))
+		if err != nil {
+			log.Println("Scan failed")
+			return nil
+		}
+		pp = append(pp, p)
+	}
+
+	return pp
 }
 
 func (bp *BlogPostgres) GetPostById(id int) post.Post {
