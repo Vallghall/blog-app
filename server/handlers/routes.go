@@ -15,7 +15,7 @@ func (h *handlers) HandleRoutes() *gin.Engine {
 		auth.POST("sign-out", h.signOut) // logging out
 	}
 
-	blog := r.Group("/blog")
+	blog := r.Group("/blog", h.authenticate)
 	{
 		blog.GET(":user_id/:num", h.readPosts) // Getting the *num posts from a user's blog
 		blog.POST(":user_id", h.createPost)    // Adding a post to a user's blog

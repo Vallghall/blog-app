@@ -10,7 +10,13 @@ import (
 )
 
 func (h *handlers) createPost(c *gin.Context) {
+	uid, ok := c.Get(UID)
 	id, err := strconv.Atoi(c.Param("user_id"))
+	if uid != id || !ok {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, ErrUnauthorized)
+		return
+	}
+
 	if err != nil {
 		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)

@@ -12,6 +12,14 @@ const (
 
 	ErrPasswordDoesntMatch = "error: password does not match confirmation password"
 	ErrBcryptError         = "error while hashing password"
+
+	ErrUnauthorized = "error: you are unauthorized"
+	ErrSignInError  = "error: error while signing in"
+)
+
+const (
+	UID      = "userID"
+	UserName = "userName"
 )
 
 type handlers struct {
