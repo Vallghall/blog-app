@@ -4,13 +4,14 @@ import (
 	"blog-app/model/post"
 	"blog-app/model/users"
 	"blog-app/repo"
-	"os/user"
 )
 
 type AuthService interface {
 	CreateUser(user users.User)
 	GetUser(username, pw string) users.User
-	GetUserById() user.User
+	GetUserById(id int) users.User
+	GenerateTokenPair(uid int) (string, string, error)
+	ParseToken(at string) (int, error)
 }
 
 type BlogService interface {
@@ -29,5 +30,8 @@ type Services struct {
 }
 
 func New(r *repo.Repo) *Services {
-	return &Services{}
+	return &Services{
+		AuthService: NewAuthService(r),
+		BlogService: NewBlogService(r),
+	}
 }
