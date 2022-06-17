@@ -4,13 +4,12 @@ import (
 	"blog-app/model/post"
 	"blog-app/model/users"
 	"blog-app/repo"
-	"os/user"
 )
 
 type AuthService interface {
 	CreateUser(user users.User)
 	GetUser(username, pw string) users.User
-	GetUserById() user.User
+	GetUserById(id int) users.User
 }
 
 type BlogService interface {

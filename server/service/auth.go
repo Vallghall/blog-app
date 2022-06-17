@@ -3,7 +3,6 @@ package service
 import (
 	"blog-app/model/users"
 	"blog-app/repo"
-	"os/user"
 )
 
 type Auth struct {
@@ -23,7 +22,7 @@ func (a *Auth) GetUser(username, pw string) users.User {
 	panic("implement me")
 }
 
-func (a *Auth) GetUserById() user.User {
+func (a *Auth) GetUserById(id int) users.User {
 	//TODO implement me
 	panic("implement me")
 }

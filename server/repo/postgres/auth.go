@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"log"
-	"os/user"
 )
 
 type AuthPostgres struct {
@@ -32,17 +31,34 @@ INSERT INTO %s (
 	}
 }
 
-func (a AuthPostgres) GetUser(username, pw string) users.User {
-	//TODO implement me
-	panic("implement me")
+func (a AuthPostgres) GetUser(username, pw string) (u users.User) {
+	query := fmt.Sprintf(`
+SELECT id, name, surname, father_name, nickname, password_hash
+	FROM %s
+	WHERE nickname=$1 && password_hash=$2;`, usersTable)
+
+	row := a.db.QueryRow(query, username, pw)
+	err := row.Scan(&u.Id, &u.Name, &u.Surname, &u.FatherName, &u.Nickname, &u.PasswordHash)
+	if err != nil {
+		log.Println(err)
+		return users.User{}
+	}
+
+	return
 }
 
-func (a AuthPostgres) GetUserById() user.User {
-	//TODO implement me
-	panic("implement me")
-}
+func (a AuthPostgres) GetUserById(id int) (u users.User) {
+	query := fmt.Sprintf(`
+SELECT id, name, surname, father_name, nickname, password_hash
+	FROM %s
+	WHERE id=$1;`, usersTable)
 
-func (a AuthPostgres) UserExists(u user.User) bool {
-	//TODO implement me
-	panic("implement me")
+	row := a.db.QueryRow(query, id)
+	err := row.Scan(&u.Id, &u.Name, &u.Surname, &u.FatherName, &u.Nickname, &u.PasswordHash)
+	if err != nil {
+		log.Println(err)
+		return users.User{}
+	}
+
+	return
 }

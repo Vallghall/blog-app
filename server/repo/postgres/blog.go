@@ -32,18 +32,61 @@ INSERT INTO %s (
 }
 
 func (bp *BlogPostgres) UpdatePost(p post.Post) {
-	//TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+UPDATE %s
+SET author_id=$1,
+	title=$2,
+	content=$3,
+	date=$4,
+	hashtags=$5
+WHERE id=$6;`, postsTable)
+
+	_, err := bp.db.Query(query, p.AuthorId, p.Title, p.Content, p.Date, pq.Array(p.Hashtags), p.Id)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 }
 
 func (bp *BlogPostgres) DeletePost(postId int) {
-	//TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+DELETE FROM %s
+WHERE id=$1;`, postsTable)
+
+	_, err := bp.db.Query(query, postId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 }
 
 func (bp *BlogPostgres) GetAllUserPosts(userId int) []post.Post {
-	//TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+SELECT p.id,p.author_id, p.title, p.content, p.date, p.hashtags
+	FROM %s p
+	JOIN %s u
+		ON u.id=p.author_id
+	WHERE u.id=$1
+	ORDER BY date DESC;`, postsTable, usersTable)
+
+	rows, err := bp.db.Query(query, userId)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+
+	pp := make([]post.Post, 0)
+	for rows.Next() {
+		var p post.Post
+		err = rows.Scan(&p.Id, &p.AuthorId, &p.Title, &p.Content, &p.Date, pq.Array(&p.Hashtags))
+		if err != nil {
+			log.Println("Scan failed")
+			return nil
+		}
+		pp = append(pp, p)
+	}
+
+	return pp
 }
 
 func (bp *BlogPostgres) GetLastNUserPosts(userId, n int) []post.Post {
@@ -77,6 +120,19 @@ SELECT p.id,p.author_id, p.title, p.content, p.date, p.hashtags
 }
 
 func (bp *BlogPostgres) GetPostById(id int) post.Post {
-	//TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+SELECT id, author_id, title, content, date, hashtags
+	FROM %s
+	WHERE id=$1;`, postsTable)
+
+	row := bp.db.QueryRow(query, id)
+
+	var p post.Post
+	err := row.Scan(&p.Id, &p.AuthorId, &p.Title, &p.Content, &p.Date, pq.Array(&p.Hashtags))
+	if err != nil {
+		log.Println("Scan failed")
+		return post.Post{}
+	}
+
+	return p
 }

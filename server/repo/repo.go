@@ -5,14 +5,12 @@ import (
 	"blog-app/model/users"
 	"blog-app/repo/postgres"
 	"github.com/jmoiron/sqlx"
-	"os/user"
 )
 
 type AuthRepo interface {
 	CreateUser(user users.User)
 	GetUser(username, pw string) users.User
-	GetUserById() user.User
-	UserExists(u user.User) bool
+	GetUserById(id int) users.User
 }
 
 type BlogRepo interface {
