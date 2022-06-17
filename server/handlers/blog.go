@@ -69,7 +69,7 @@ func (h *handlers) updatePost(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
 		return
 	}
-	p.AuthorId = id
+	p.Id = id
 
 	h.BlogService.UpdatePost(p)
 	c.JSON(http.StatusOK, map[string]string{

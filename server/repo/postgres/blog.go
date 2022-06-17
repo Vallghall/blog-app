@@ -34,14 +34,12 @@ INSERT INTO %s (
 func (bp *BlogPostgres) UpdatePost(p post.Post) {
 	query := fmt.Sprintf(`
 UPDATE %s
-SET author_id=$1,
-	title=$2,
-	content=$3,
-	date=$4,
-	hashtags=$5
-WHERE id=$6;`, postsTable)
+SET title=$1,
+	content=$2,
+	hashtags=$3
+WHERE id=$4;`, postsTable)
 
-	_, err := bp.db.Query(query, p.AuthorId, p.Title, p.Content, p.Date, pq.Array(p.Hashtags), p.Id)
+	_, err := bp.db.Query(query, p.Title, p.Content, pq.Array(p.Hashtags), p.Id)
 	if err != nil {
 		log.Println(err)
 		return

@@ -38,7 +38,7 @@ func (h *handlers) signUp(c *gin.Context) {
 
 	if sui.Password != sui.ConfirmPassword {
 		log.Println(ErrPasswordDoesntMatch)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, ErrPasswordDoesntMatch)
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrPasswordDoesntMatch)
 		return
 	}
 
