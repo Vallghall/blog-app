@@ -7,7 +7,7 @@ import (
 )
 
 type AuthService interface {
-	CreateUser(user users.User)
+	CreateUser(user users.User) int
 	GetUser(username, pw string) users.User
 	GetUserById(id int) users.User
 	GenerateTokenPair(uid int) (string, string, error)

@@ -60,11 +60,33 @@ func (h *handlers) readPosts(c *gin.Context) {
 	})
 }
 
+func (h *handlers) getPost(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("post_id"))
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
+		return
+	}
+
+	p := h.BlogService.GetPostById(id)
+	c.JSON(http.StatusOK, map[string]post.Post{
+		"post": p,
+	})
+}
+
 func (h *handlers) updatePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("post_id"))
 	if err != nil {
 		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
+		return
+	}
+	usrId, _ := c.Get(UID)
+	prvVersion := h.BlogService.GetPostById(id)
+	if usrId != prvVersion.AuthorId {
+		c.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+			"message": "Cannot edit another user's post",
+		})
 		return
 	}
 
@@ -88,6 +110,15 @@ func (h *handlers) deletePost(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
+		return
+	}
+
+	usrId, _ := c.Get(UID)
+	prvVersion := h.BlogService.GetPostById(id)
+	if usrId != prvVersion.AuthorId {
+		c.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+			"message": "Cannot delete another user's post",
+		})
 		return
 	}
 

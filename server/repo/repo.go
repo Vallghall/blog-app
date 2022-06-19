@@ -8,7 +8,7 @@ import (
 )
 
 type AuthRepo interface {
-	CreateUser(user users.User)
+	CreateUser(user users.User) int
 	GetUser(username, pw string) users.User
 	GetUserById(id int) users.User
 }

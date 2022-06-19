@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -57,7 +58,8 @@ func (h *handlers) signIn(c *gin.Context) {
 	})
 
 	c.JSON(http.StatusOK, map[string]string{
-		"token": at,
+		"token":   at,
+		"user_id": strconv.Itoa(u.Id),
 	})
 }
 
@@ -76,7 +78,7 @@ func (h *handlers) signUp(c *gin.Context) {
 		return
 	}
 
-	h.AuthService.CreateUser(users.User{
+	id := h.AuthService.CreateUser(users.User{
 		Name:         sui.Name,
 		Surname:      sui.Surname,
 		FatherName:   sui.FatherName,
@@ -85,6 +87,7 @@ func (h *handlers) signUp(c *gin.Context) {
 	})
 	c.JSON(http.StatusOK, map[string]string{
 		"message": "OK",
+		"user_id": strconv.Itoa(id),
 	})
 }
 
