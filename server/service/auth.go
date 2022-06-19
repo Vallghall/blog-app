@@ -38,8 +38,8 @@ type Claims struct {
 	markant float64
 }
 
-func (a *Auth) CreateUser(user users.User) {
-	a.r.CreateUser(user)
+func (a *Auth) CreateUser(user users.User) int {
+	return a.r.CreateUser(user)
 }
 
 func (a *Auth) GetUser(username, pw string) users.User {

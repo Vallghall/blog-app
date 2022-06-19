@@ -60,6 +60,20 @@ func (h *handlers) readPosts(c *gin.Context) {
 	})
 }
 
+func (h *handlers) getPost(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("post_id"))
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, ErrInvalidParams)
+		return
+	}
+
+	p := h.BlogService.GetPostById(id)
+	c.JSON(http.StatusOK, map[string]post.Post{
+		"post": p,
+	})
+}
+
 func (h *handlers) updatePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("post_id"))
 	if err != nil {

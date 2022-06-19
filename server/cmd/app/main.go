@@ -16,9 +16,20 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db := postgres.New(os.Getenv("DB_URL"))
+	db := postgres.New(getDBConfigs())
 	r := repo.New(db)
 	s := service.New(r)
 	g := handlers.New(s).HandleRoutes()
 	log.Fatalln(g.Run(":" + os.Getenv("PORT")))
+}
+
+func getDBConfigs() *postgres.Configs {
+	return &postgres.Configs{
+		Host:     os.Getenv("DB_HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		DBName:   os.Getenv("DB_NAME"),
+		Password: os.Getenv("DB_PW"),
+		SSLMode:  os.Getenv("DB_SSL"),
+	}
 }

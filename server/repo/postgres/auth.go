@@ -15,7 +15,7 @@ func NewAuthRepo(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db}
 }
 
-func (a AuthPostgres) CreateUser(u users.User) {
+func (a AuthPostgres) CreateUser(u users.User) (id int) {
 	query := fmt.Sprintf(`
 INSERT INTO %s (
 	name,
@@ -23,12 +23,17 @@ INSERT INTO %s (
 	father_name,
 	nickname,
 	password_hash
-) VALUES ($1,$2,$3,$4,$5);`, usersTable)
+) VALUES ($1,$2,$3,$4,$5)
+RETURNING id;`, usersTable)
 
-	_, err := a.db.Query(query, u.Name, u.Surname, u.FatherName, u.Nickname, u.PasswordHash)
+	row := a.db.QueryRow(query, u.Name, u.Surname, u.FatherName, u.Nickname, u.PasswordHash)
+	err := row.Scan(&id)
 	if err != nil {
 		log.Println(err)
+		return 0
 	}
+
+	return
 }
 
 func (a AuthPostgres) GetUser(username, pw string) (u users.User) {
